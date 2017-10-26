@@ -21,3 +21,20 @@ Where manifest.txt is replaced with the full filename+extension of your own mani
 
 Files will download to your current working directory. It works well to navigate to the same directory as the software and manifest, and to initiate the download from there.
 
+# Example
+
+To download the idat (level 1) HM450 methylation array images for COAD-READ cohort samples, first assemble a file manifest to be used in the GDAC download client.
+
+First, navigate to the [TCGA Legacy Archive](https://portal.gdc.cancer.gov/legacy-archive/search/f). Toggle between the Cases and Files filter tabs to select filter criteria. Be sure specify the following:
+
+1. Primary Site: "Colorectal"
+2. Data Category: "Raw microarray data"
+3. Experimental Strategy: "Methylation array"
+4. Data Format: "idat" 
+5. Platform: "Illumina Human Methylation 450"
+
+Once these are specified, 918 files should be selected corresponding to the Red and Green channel idat files for available COAD and READ cohort samples. Click "Download Manifest".
+
+Place the manifest in the same directory as the gdc client. From Windows Commander or equivalent prompt, navigate to the folder with the manifest and gdc download client. Enter the command above, specifying the name and extension of the manifest file just downloaded. This should create a new directory tree to which the files are downloaded.
+
+#

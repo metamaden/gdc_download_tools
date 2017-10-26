@@ -23,7 +23,7 @@ Files will download to your current working directory. It works well to navigate
 
 # Example
 
-To download the idat (level 1) HM450 methylation array images for COAD-READ cohort samples, first assemble a file manifest to be used in the GDAC download client.
+To download the idat (level 1) HM450 methylation array images for COAD-READ cohort samples, first assemble a file manifest to be used in the GDC File Transfer client.
 
 First, navigate to the [TCGA Legacy Archive](https://portal.gdc.cancer.gov/legacy-archive/search/f). Toggle between the Cases and Files filter tabs to select filter criteria. Be sure specify the following:
 
@@ -35,6 +35,6 @@ First, navigate to the [TCGA Legacy Archive](https://portal.gdc.cancer.gov/legac
 
 Once these are specified, 918 files should be selected corresponding to the Red and Green channel idat files for available COAD and READ cohort samples. Click "Download Manifest".
 
-Place the manifest in the same directory as the gdc client. From Windows Commander or equivalent prompt, navigate to the folder with the manifest and gdc download client. Enter the command above, specifying the name and extension of the manifest file just downloaded. This should create a new directory tree to which the files are downloaded.
+Place the manifest in the same directory as the gdc client. From Windows Commander or equivalent prompt, navigate to the folder with the manifest and gdc download client. Enter the command above, specifying the name and extension of the manifest file just downloaded. This should create a new directory tree to which the files are downloaded (the COAD, READ, and merged manifests are provided here, in a subdirectory).
 
 #

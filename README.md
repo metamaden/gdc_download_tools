@@ -35,6 +35,12 @@ First, navigate to the [TCGA Legacy Archive](https://portal.gdc.cancer.gov/legac
 
 Once these are specified, 918 files should be selected corresponding to the Red and Green channel idat files for available COAD and READ cohort samples. Click "Download Manifest".
 
-Place the manifest in the same directory as the gdc client. From Windows Commander or equivalent prompt, navigate to the folder with the manifest and gdc download client. Enter the command above, specifying the name and extension of the manifest file just downloaded. This should create a new directory tree to which the files are downloaded (the COAD, READ, and merged manifests are provided here, in a subdirectory).
+Place the manifest in the same directory as the gdc client. From Windows Commander or equivalent prompt, navigate to the folder with the manifest and gdc download client. Use the appropriate code in Terminal, Commander, etc. For example, the manifest "gdc_manifest.2017-10-26T17-53-35.235004.txt" (contained in the examples subdirectory of this module) contains information for downloading idat files for the COAD-READ TCGA cohorts, and the appropriate command line code would be:
+
+```
+gdc-client download -m gdc_manifest.2017-10-26T17-53-35.235004.txt 
+```
+
+This should create a new directory tree to which the files are downloaded. Supplementary files for this example are provided in the examples subdirectory.
 
 #

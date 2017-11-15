@@ -2,7 +2,7 @@
 Directions and code for generic GDC data downloads.
 
 # Background
-The Cancer Genome Atlas (TCGA) and CCLE databases are now hosted on the [Genomics Data Commons (GDC)](https://portal.gdc.cancer.gov/projects) and [TCGA Legacy Archive](https://portal.gdc.cancer.gov/legacy-archive/search/f). Data files are no longer downloaded through interactive GUI but instead via remote connection.
+The Cancer Genome Atlas (TCGA) and CCLE databases are now hosted on the [Genomics Data Commons (GDC)](https://portal.gdc.cancer.gov/projects) and [TCGA Legacy Archive](https://portal.gdc.cancer.gov/legacy-archive/search/f). Large batches of data files are now best downloaded via remote connection using a manifest and the GDC download tool.
 
 The process to download is simple, but not too intuitive (hence this package). To designate files to download, it is necessary to generate a manifest using the main GDC site and clicking "download manifest". This file should then be used in the GDC download client as described below.
 

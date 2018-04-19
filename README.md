@@ -25,7 +25,7 @@ Files will download to your current working directory. It works well to navigate
 Available data is stored in a variety of different formats, each of which typically has its own semantics, standards, and QC. Check the semantics online, and also check the preprocessing pipeline(s) on the TCGA wiki page.
 
 # XML Files
-Often, clinical, biospecimen, and tumor data are available only in XML format. Thus it can be very useful to know how to parse these XML files and re-format as a flat dataframe. For more information, see the examples folder for information and an example involving the COAD-READ project sample biospecimen data.
+Often, clinical, biospecimen, and tumor data are available only in XML format. Thus it can be very useful to know how to parse these XML files and re-format as a flat dataframe. For more information and an implementation with the COAD-READ project files, see the 'gdc_xml_process' folder in the coad-read example files.
 
 # Example
 

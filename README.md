@@ -21,6 +21,12 @@ Where manifest.txt is replaced with the full filename+extension of your own mani
 
 Files will download to your current working directory. It works well to navigate to the same directory as the software and manifest, and to initiate the download from there.
 
+# File Types
+Available data is stored in a variety of different formats, each of which typically has its own semantics, standards, and QC. Check the semantics online, and also check the preprocessing pipeline(s) on the TCGA wiki page.
+
+# XML Files
+Often, clinical, biospecimen, and tumor data are available only in XML format. Thus it can be very useful to know how to parse these XML files and re-format as a flat dataframe. For more information, see the examples folder for information and an example involving the COAD-READ project sample biospecimen data.
+
 # Example
 
 To download the idat (level 1) HM450 methylation array images for COAD-READ cohort samples, first assemble a file manifest to be used in the GDC File Transfer client.

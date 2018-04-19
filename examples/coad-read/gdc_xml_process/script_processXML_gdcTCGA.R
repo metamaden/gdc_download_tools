@@ -1,7 +1,10 @@
 # script: parse and reformat GDC XML data download
-# NOTE: to download xml files off gdc, download the manifest, 
+
+# NOTES: 
+# to download xml files off gdc, download the manifest, 
 # navigate to dir with manifest and gdc dl client .exe file, and use the following:
-# gdc-client download -m [MANIFEST_FILENAME].extension 
+# gdc-client download -m gdc_manifest.2018-04-19.txt
+# see examples folder for output files and the manifest table
 
 library(XML)
 

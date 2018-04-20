@@ -25,9 +25,31 @@ Files will download to your current working directory. It works well to navigate
 Available data is stored in a variety of different formats, each of which typically has its own semantics, standards, and QC. Check the semantics online, and also check the preprocessing pipeline(s) on the TCGA wiki page.
 
 # XML Files
-Often, clinical, biospecimen, and tumor data are available only in XML format. Thus it can be very useful to know how to parse these XML files and re-format as a flat dataframe. For more information and an implementation with the COAD-READ project files, see the 'gdc_xml_process' folder in the coad-read example files.
+Often, clinical, biospecimen, and tumor data are available only in XML format. Thus it can be very useful to know how to parse these XML files and re-format as a flat dataframe. For more information and an implementation with the COAD-READ project files, see the 'gdc_xml_process' folder in the coad-read example files. See example below for instructions on working XML files from GDC.
 
-## XML Files Example: COAD-READ Biospecimen Data
+# Example Remote GDC Batch File Download
+
+To download the idat (level 1) HM450 methylation array images for COAD-READ cohort samples, first assemble a file manifest to be used in the GDC File Transfer client.
+
+First, navigate to the [TCGA Legacy Archive](https://portal.gdc.cancer.gov/legacy-archive/search/f). Toggle between the Cases and Files filter tabs to select filter criteria. Be sure specify the following:
+
+1. Primary Site: "Colorectal"
+2. Data Category: "Raw microarray data"
+3. Experimental Strategy: "Methylation array"
+4. Data Format: "idat" 
+5. Platform: "Illumina Human Methylation 450"
+
+Once these are specified, 918 files should be selected corresponding to the Red and Green channel idat files for available COAD and READ cohort samples. Click "Download Manifest".
+
+Place the manifest in the same directory as the gdc client. From Windows Commander or equivalent prompt, navigate to the folder with the manifest and gdc download client. Use the appropriate code in Terminal, Commander, etc. For example, the manifest "gdc_manifest.2017-10-26T17-53-35.235004.txt" (contained in the examples subdirectory of this module) contains information for downloading idat files for the COAD-READ TCGA cohorts, and the appropriate command line code would be:
+
+```
+gdc-client download -m gdc_manifest.2017-10-26T17-53-35.235004.txt 
+```
+
+This should create a new directory tree to which the files are downloaded. Supplementary files for this example are provided in the examples subdirectory.
+
+# XML Files Example: COAD-READ Biospecimen Data
 This example outlines a proof-of-principle for aggregating patient-level Biospecimen data, in XML format, into a flat dataframe with R. Files for this example can be found in the examples/coad-read/gdc_xml_process subdirectory. 
 
 After you have downloaded the manifest for all COAD-READ biospecimen files and remotely downloaded these files locally with the gdc download client, you can iterate over the patient-level subdirectories as follows:
@@ -97,27 +119,3 @@ xi[[1]]$percent_tumor_cells$text # returns:
 #[1] "95"
 
 ```
-
-# Example
-
-To download the idat (level 1) HM450 methylation array images for COAD-READ cohort samples, first assemble a file manifest to be used in the GDC File Transfer client.
-
-First, navigate to the [TCGA Legacy Archive](https://portal.gdc.cancer.gov/legacy-archive/search/f). Toggle between the Cases and Files filter tabs to select filter criteria. Be sure specify the following:
-
-1. Primary Site: "Colorectal"
-2. Data Category: "Raw microarray data"
-3. Experimental Strategy: "Methylation array"
-4. Data Format: "idat" 
-5. Platform: "Illumina Human Methylation 450"
-
-Once these are specified, 918 files should be selected corresponding to the Red and Green channel idat files for available COAD and READ cohort samples. Click "Download Manifest".
-
-Place the manifest in the same directory as the gdc client. From Windows Commander or equivalent prompt, navigate to the folder with the manifest and gdc download client. Use the appropriate code in Terminal, Commander, etc. For example, the manifest "gdc_manifest.2017-10-26T17-53-35.235004.txt" (contained in the examples subdirectory of this module) contains information for downloading idat files for the COAD-READ TCGA cohorts, and the appropriate command line code would be:
-
-```
-gdc-client download -m gdc_manifest.2017-10-26T17-53-35.235004.txt 
-```
-
-This should create a new directory tree to which the files are downloaded. Supplementary files for this example are provided in the examples subdirectory.
-
-#

@@ -34,7 +34,7 @@ After you have downloaded the manifest for all COAD-READ biospecimen files and r
 ```
 library(XML) # load the XML R module
 
-# get a list of the names of diretories with patient XML files
+# get a list of the names of directories with patient XML files
 fn <- list.files()
 fn.oi <- fn[nchar(fn)==36]; length(fn.oi) # 633 xml files for COAD-READ
 
@@ -71,19 +71,20 @@ names(xmlcr.list$`patid-3968`) # returns:
 length(xmlcr.list$`patid-3968`$samples$sample$portions$portion$slides)
 # [1] 2
 
-# NOTE: slide items will all be called 'slide', so R studio auto-complete will only show one slide name
-# by default, the first item named slide will display.
+# NOTE: slide items will all be called 'slide', so R studio auto-complete will only show one slide name.
+# By default, the first item named slide will display.
 # Instead of calling '$slide', where there is >1 slide, use a position index such as '[[1]]' or '[[2]]'
 
-# get the barcodes for each slide for this patient
 xi <- xmlcr.list$`patid-3968`$samples$sample$portions$portion$slides
-xi[[1]]$bcr_slide_barcode$text
-#[1] "TCGA-AA-3968-01A-01-BS1"
-xi[[2]]$bcr_slide_barcode$text
-#[1] "TCGA-AA-3968-01A-01-TS1"
+
+# get the barcodes for each slide for this patient
+xi[[1]]$bcr_slide_barcode$text # returns:
+#[1] "TCGA-AA-3968-01A-01-BS1" # 'B' -> "BOTTOM" slide
+xi[[2]]$bcr_slide_barcode$text # returns: 
+#[1] "TCGA-AA-3968-01A-01-TS1" # 'T' -> "TOP" slide
 
 # view the biospecimen data for a slide
-names(xi[[1]])
+names(xi[[1]]) # returns:
 # [1] "additional_studies"               "section_location"                 "number_proliferating_cells"      
 # [4] "percent_tumor_cells"              "percent_tumor_nuclei"             "percent_normal_cells"            
 # [7] "percent_necrosis"                 "percent_stromal_cells"            "percent_inflam_infiltration"     
@@ -92,7 +93,7 @@ names(xi[[1]])
 #[16] "bcr_slide_uuid"                   "image_file_name"                  "is_derived_from_ffpe"
 
 # access the percent tumor cells for the first slide
-xi[[1]]$percent_tumor_cells$text
+xi[[1]]$percent_tumor_cells$text # returns:
 #[1] "95"
 
 ```

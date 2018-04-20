@@ -27,6 +27,76 @@ Available data is stored in a variety of different formats, each of which typica
 # XML Files
 Often, clinical, biospecimen, and tumor data are available only in XML format. Thus it can be very useful to know how to parse these XML files and re-format as a flat dataframe. For more information and an implementation with the COAD-READ project files, see the 'gdc_xml_process' folder in the coad-read example files.
 
+## XML Files Example: COAD-READ Biospecimen Data
+This example outlines a proof-of-principle for aggregating patient-level Biospecimen data, in XML format, into a flat dataframe with R. Files for this example can be found in the examples/coad-read/gdc_xml_process subdirectory. 
+
+After you have downloaded the manifest for all COAD-READ biospecimen files and remotely downloaded these files locally with the gdc download client, you can iterate over the patient-level subdirectories as follows:
+```
+library(XML) # load the XML R module
+
+# get a list of the names of diretories with patient XML files
+fn <- list.files()
+fn.oi <- fn[nchar(fn)==36]; length(fn.oi) # 633 xml files for COAD-READ
+
+# instantiate a new list to hold parsed XML data for patients
+xmlcr.list <- list()
+
+# loop over the subdirectories and parse XML files
+for(i in 1:length(fn.oi)){
+  x <- fn.oi[i]
+  pathi <- paste0(getwd(),"/",x)
+  lfi <- list.files(pathi); lfi.xml <- lfi[grepl(".xml",lfi)]
+  pathi.xml <- paste0(pathi,"/",lfi[grepl(".xml",lfi)])
+  xmli <- xmlToList(xmlParse(pathi.xml))
+  
+  slide.sidei <- xmli$patient$samples$sample$portions$portion$slides$slide$section_location$text
+  
+  xmlcr.list[length(xmlcr.list)+1] <- list(xmli$patient)
+  names(xmlcr.list)[length(xmlcr.list)] <- paste0("patid-",xmli$patient$patient_id$text)
+  message(i)
+}
+
+# resulting xmlcr.list should consist of a list of patient-level data (format is a tree of lists)
+# with names(xmlcr.list) being the patient ID
+
+head(names(xmlcr.list)) # returns:
+# [1] "patid-3968" "patid-3530" "patid-A01I" "patid-6295" "patid-6809" "patid-3582"
+
+names(xmlcr.list$`patid-3968`) # returns:
+#[1] "additional_studies"  "bcr_patient_barcode" "bcr_patient_uuid"    "tissue_source_site"  "patient_id"         
+#[6] "gender"              "days_to_index"       "bcr_canonical_check" "samples"
+
+# to access slide-level biospecimen data for a patient, note the number of available slides first
+
+length(xmlcr.list$`patid-3968`$samples$sample$portions$portion$slides)
+# [1] 2
+
+# NOTE: slide items will all be called 'slide', so R studio auto-complete will only show one slide name
+# by default, the first item named slide will display.
+# Instead of calling '$slide', where there is >1 slide, use a position index such as '[[1]]' or '[[2]]'
+
+# get the barcodes for each slide for this patient
+xi <- xmlcr.list$`patid-3968`$samples$sample$portions$portion$slides
+xi[[1]]$bcr_slide_barcode$text
+#[1] "TCGA-AA-3968-01A-01-BS1"
+xi[[2]]$bcr_slide_barcode$text
+#[1] "TCGA-AA-3968-01A-01-TS1"
+
+# view the biospecimen data for a slide
+names(xi[[1]])
+# [1] "additional_studies"               "section_location"                 "number_proliferating_cells"      
+# [4] "percent_tumor_cells"              "percent_tumor_nuclei"             "percent_normal_cells"            
+# [7] "percent_necrosis"                 "percent_stromal_cells"            "percent_inflam_infiltration"     
+#[10] "percent_lymphocyte_infiltration"  "percent_monocyte_infiltration"    "percent_granulocyte_infiltration"
+#[13] "percent_neutrophil_infiltration"  "percent_eosinophil_infiltration"  "bcr_slide_barcode"               
+#[16] "bcr_slide_uuid"                   "image_file_name"                  "is_derived_from_ffpe"
+
+# access the percent tumor cells for the first slide
+xi[[1]]$percent_tumor_cells$text
+#[1] "95"
+
+```
+
 # Example
 
 To download the idat (level 1) HM450 methylation array images for COAD-READ cohort samples, first assemble a file manifest to be used in the GDC File Transfer client.

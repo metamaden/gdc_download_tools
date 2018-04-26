@@ -39,166 +39,96 @@ save(xmlcr.list,file="gdcDL_xml-biospec_coadread_patient-data-list.rda")
 #===========================================
 # assemble df from desired data of interest
 #===========================================
-dfslide.coadread <- as.data.frame(matrix(nrow=0,ncol=10))
-namesx <- c("bc","patid","hist.id","hist.type","tumorcell.perc","normcell.perc",
-            "necr.perc","strom.perc","slide.side","filename")
-colnames(dfslide.coadread) <- namesx
+slide.df <- as.data.frame(matrix(nrow=0,ncol=8))
+colnames(slide.df) <- c("pat.id","nsamples","nslides","slide.file","slide.bc","perc.norm","perc.tumor","perc.strom","perc.necr")
 
-for(i in 1:length(xmlcr.list)){
-  xi <- xmlcr.list[[i]]
+for(i in 1:length(xml)){
+  samplesi <- xml[[i]]$samples
+  pat.idi <- names(xml)[i]
   
-  # grab xml list data for patient sample/slide i
+  slide.filename.jx <- slide.bc.jx <- perc.norm.jx <- perc.tumor.jx <- perc.strom.jx <- perc.necr.jx <- c()
   
-  pidi <- xi$patient_id$text # patient id
-  hist.codei <- xi$samples$sample$sample_type_id$text # histology tissue code 
-  hist.typei <- xi$samples$sample$sample_type$text # histology description
+  nslide.j <- c()
   
-  if(!is.null(xi$samples$sample$portions$portion$slides)){
+  for(j in 1:length(samplesi)){
     
-    nslidesi <- length(xi$samples$sample$portions$portion$slides)
-    return.row <- list()
+    xij <- samplesi[[j]]$portion$portion$slides
     
-    
-    if(nslidesi>1){
-      for(x in 1:nslidesi){
-        slidex <- xi$samples$sample$portions$portion$slides[[x]]
+    nslide.j <- c(nslide.j,length(xij))
+     
+    if(length(xij)>0){
+      for(x in 1:length(xij)){
+        slidex <- xij[[x]]
         
-        bci <- slidex$bcr_slide_barcode$text # barcode,full
+        if("text" %in% names(slidex$percent_tumor_cells)){
+          perc.tumor.jx <- c(perc.tumor.jx,slidex$percent_tumor_cells$text)
+        } else{perc.tumor.jx <- c(perc.tumor.jx,"NA")}
         
-        if(length(slidex$percent_tumor_cells)==2){
-          tcellperci <- slidex$percent_tumor_cells$text # tumor cell percent
-        } else{
-          tcellperci <- "NA"
-        }
+        if("text" %in% names(slidex$percent_normal_cells)){
+          perc.norm.jx <- c(perc.norm.jx,slidex$percent_normal_cells$text)
+        } else{perc.norm.jx <- c(perc.norm.jx,"NA")}
         
-        if(length(slidex$percent_normal_cells)==2){
-          ncellperci <- slidex$percent_normal_cells$text # norm cell percent
-        } else{
-          ncellperci <- "NA"
-        }
+        if("text" %in% names(slidex$percent_stromal_cells)){
+          perc.strom.jx <- c(perc.strom.jx,slidex$percent_stromal_cells$text)
+        } else{perc.strom.jx <- c(perc.strom.jx,"NA")}
         
-        if(length(slidex$percent_necrosis)==2){
-          necrperci <- slidex$percent_necrosis$text # necrosis percent
-        } else{
-          necrperci <- "NA"
-        }
+        if("text" %in% names(slidex$percent_necrosis)){
+          perc.necr.jx <- c(perc.necr.jx,slidex$percent_necrosis$text)
+        } else{perc.necr.jx <- c(perc.necr.jx,"NA")}
         
-        if(length(slidex$percent_stromal_cells)==2){
-          stromperci <- slidex$percent_stromal_cells$text # stromal cell percent
-        }else{
-          stromperci <- "NA"
-        }
+        if("text" %in% names(slidex$bcr_slide_barcode)){
+          slide.bc.jx <- c(slide.bc.jx,slidex$bcr_slide_barcode$text)
+        } else{slide.bc.jx <- c(slide.bc.jx,"NA")}
         
-        if(!is.null(slidex$section_location)){
-          slidesidei <- slidex$section_location$text # slide side (TOP/BOTTOM)
-        } else{
-          slidesidei <- "NA"
-        }
-        
-        if(length(slidex$image_file_name)==2){
-          filenamei <- slidex$image_file_name$text
-        } else{
-          filenamei <- "NA"
-        }
-        
-        rrv <- as.vector(c(bci,pidi,
-                           hist.codei,hist.typei,
-                           tcellperci,ncellperci,necrperci,stromperci,
-                           slidesidei,
-                           filenamei))
-        names(rrv) <- namesx
-        
-        return.row[[x]] <- rrv
+        if("text" %in% names(slidex$image_file_name)){
+          slide.filename.jx <- c(slide.filename.jx,slidex$image_file_name$text)
+        } else{slide.filename.jx <- c(slide.filename.jx,"NA")}
         
       }
-    } else{
       
-      slidex1 <- xi$samples$sample$portions$portion$slides$slide
-      
-      bci <- slidex$bcr_slide_barcode$text # barcode,full
-      
-      if(length(slidex1$percent_tumor_cells)==2){
-        tcellperci <- slidex1$percent_tumor_cells$text # tumor cell percent
-      } else{
-        tcellperci <- "NA"
-      }
-      
-      if(length(slidex1$percent_normal_cells)==2){
-        ncellperci <- slidex1$percent_normal_cells$text # norm cell percent
-      } else{
-        ncellperci <- "NA"
-      }
-      
-      if(length(slidex1$percent_necrosis)==2){
-        necrperci <- slidex1$percent_necrosis$text # necrosis percent
-      } else{
-        necrperci <- "NA"
-      }
-      
-      if(length(slidex1$percent_stromal_cells)==2){
-        stromperci <- slidex1$percent_stromal_cells$text # stromal cell percent
-      }else{
-        stromperci <- "NA"
-      }
-      
-      if(!is.null(slidex1$section_location)){
-        slidesidei <- slidex1$section_location$text # slide side (TOP/BOTTOM)
-      } else{
-        slidesidei <- "NA"
-      }
-      
-      if(length(slidex1$image_file_name)==2){
-        filenamei <- slidex1$image_file_name$text
-      } else{
-        filenamei <- "NA"
-      }
-      
-      rrv <- as.vector(c(bci,pidi,
-                         hist.codei,hist.typei,
-                         tcellperci,ncellperci,necrperci,stromperci,
-                         slidesidei,
-                         filenamei))
-      names(rrv) <- namesx
-      
-      return.row[[1]] <- rrv
-      
-    }
-  } else{
-    bci <- tcellperci <- ncellperci <- necrperci <- stromperci <- slidesidei <- filenamei <- "NA"
-    
-    rrv <- as.vector(c(bci,pidi,
-                       hist.codei,hist.typei,
-                       tcellperci,ncellperci,necrperci,stromperci,
-                       slidesidei,
-                       filenamei))
-    names(rrv) <- namesx
-    
-    return.row[[1]] <- rrv
-  }
-  
-  # rbind the rows to return, can accept multiple rows where multiple slides available
-  if(nslidesi>1){
-    
-    for(x in 1:length(return.row)){
-      dfbindx <- as.data.frame(matrix(return.row[[x]],ncol=10))
-      colnames(dfbindx) <- names(return.row[[x]])
-      dfslide.coadread <- rbind(dfslide.coadread,dfbindx)
       
     }
     
-  } else{
-    dfbindx <- as.data.frame(matrix(return.row[[1]],ncol=10))
-    colnames(dfbindx) <- names(return.row[[1]])
-    dfslide.coadread <- rbind(dfslide.coadread,dfbindx)
+    
   }
+  
+  if(length(perc.tumor.jx)>0){
+    ret <- data.frame(pat.id=rep(pat.idi,length(perc.tumor.jx)),
+                      nsamples=rep(length(samplesi),length(perc.tumor.jx)),
+                      nslides=rep(paste0(nslide.j,collapse=";"),length(perc.tumor.jx)),
+                      slide.file=slide.filename.jx,
+                      slide.bc=slide.bc.jx,
+                      perc.norm=perc.norm.jx,
+                      perc.tumor=perc.tumor.jx,
+                      perc.strom=perc.strom.jx,
+                      perc.necr=perc.necr.jx,stringsAsFactors = F)
+    
+    slide.df <- rbind(slide.df,ret)
+    
+  } else{
+    ret <- data.frame(pat.id=pat.idi,
+                      nsamples=length(samplesi),
+                      nslides=paste0(nslide.j,collapse=";"),
+                      slide.file="NA",slide.bc="NA",perc.norm="NA",perc.tumor="NA",perc.strom="NA",
+                      perc.necr="NA",stringsAsFactors = F)
+    slide.df <- rbind(slide.df,ret)
+  }
+  
   
   message(i)
 }
 
-dim(dfslide.coadread) # [1] 1148   10
-dfslide.coadread <- dfslide.coadread[!duplicated(dfslide.coadread$filename),]; 
-dim(dfslide.coadread) # [1] 1144   10
+dim(slide.df)
+#[1] 1305    9
+dim(dfslide.coadread)
+#[1] 1144   10
+length(unique(slide.df$pat.id))
+#[1] 633
+table(slide.df$nslides) # format: '#slides-sample1; #slides-sample2; etc.'
+#0;0     1;0   1;0;0   1;0;1     1;1   1;1;0   1;2;0     2;0 2;0;0;1   2;0;1   2;0;2     2;1     2;2   2;2;0 2;2;0;1 2;2;0;2 
+#2     110       1       4       2       2       9     804       9     132      16     102      68      12      20      12
+length(unique(slide.df[!slide.df$perc.necr=="NA",]$pat.id))
+#[1] 631
 
-write.csv(dfslide.coadread,file="dfslide-biospecimen_coadread_gdcDL.csv",row.names=F)
-save(dfslide.coadread,file="dfslide_coadread_gdcDL.rda")
-
+write.csv(slide.df,"biospec-gdcDL_slide-df-allsamples__coad-read-tcga.csv")
+save(slide.df,file="biospec-gdcDL_slide-df-allsamples__coad-read-tcga.rda")

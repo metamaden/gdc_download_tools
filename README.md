@@ -93,7 +93,10 @@ names(xmlcr.list$`patid-3968`) # returns:
 length(xmlcr.list$`patid-3968`$samples$sample$portions$portion$slides)
 # [1] 2
 
-# NOTE: slide items will all be called 'slide', so R studio auto-complete will only show one slide name.
+# NOTE: Multiple items in a class, like slides or samples, can be listed with the same name, 
+# (this is by default the way the xml files are parsed)
+# For instance, multiple samples can be each called "sample" under the "samples" item 
+# Also, slide items will all be called 'slide', so R-studio auto-complete will only show one slide name.
 # By default, the first item named slide will display.
 # Instead of calling '$slide', where there is >1 slide, use a position index such as '[[1]]' or '[[2]]'
 
